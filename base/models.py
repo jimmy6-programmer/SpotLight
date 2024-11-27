@@ -1,0 +1,219 @@
+from django.db import models
+import uuid
+import qrcode
+from django.core.files import File
+from io import BytesIO
+from django.core.validators import RegexValidator
+from django.db import models
+import africastalking
+from django.conf import settings
+
+class Category(models.Model):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.name
+    
+class Perfomer(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    artist_name = models.CharField(max_length=100)
+    gender = models.CharField(max_length=100)
+    description = models.TextField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="perfomers/")
+    facebook = models.URLField(blank=True, null=True)
+    twitter = models.URLField(blank=True, null=True)
+    instagram = models.URLField(blank=True, null=True)
+    money_per_hour = models.IntegerField(null=True, blank=True)
+    video_highlight = models.URLField(blank=True, null=True)
+        
+    def __str__(self):
+        return self.artist_name
+    
+class Event(models.Model):
+    name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    date = models.DateTimeField()
+    description = models.TextField()
+    banner = models.ImageField(upload_to="events/")
+    
+    def __str__(self):
+        return self.name
+       
+class Ticket(models.Model):
+    name = models.CharField(max_length=200)
+    price = models.IntegerField()
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    number_of_ticket=models.IntegerField(default="0")
+    
+class ParkingLot(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='parking_lots')
+    lot_number = models.CharField(max_length=50)
+    availability = models.BooleanField(default=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Parking Lot {self.lot_number} for {self.event.name}"
+    
+class ParkingBooking(models.Model):
+    parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='bookings')
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=15)
+    payment_method = models.CharField(max_length=10, choices=[('MTN', 'MTN'), ('Airtel', 'Airtel')])
+    booked_at = models.DateTimeField(auto_now_add=True)
+    qr_code = models.ImageField(upload_to='parking_qr_codes/', blank=True, editable=False, null=True)
+
+    def __str__(self):
+        return f"Booking for {self.firstname} {self.lastname} - Lot {self.parking_lot.lot_number}"
+
+    def save(self, *args, **kwargs):
+        if not self.qr_code:  # Only generate if `qr_code` is not set
+            qr_data = (
+                f"Booking ID: {self.id}\n"
+                f"Name: {self.firstname} {self.lastname}\n"
+                f"Phone Number: {self.telephone}\n"
+                f"Event: {self.parking_lot.event.name}\n"
+                f"Parking Lot: {self.parking_lot.lot_number}\n"
+                f"Date: {self.parking_lot.event.date.strftime('%Y-%m-%d %H:%M')}"
+            )
+
+            qr_image = qrcode.make(qr_data)
+            buffer = BytesIO()
+            qr_image.save(buffer, format='PNG')
+
+            # Generate a unique filename
+            filename = f"{self.id}_qr_code.png"
+
+            # Save the QR code image to the field
+            self.qr_code.save(filename, File(buffer), save=False)
+            
+        super().save(*args, **kwargs)
+    
+    
+PAYMENT_CHOICES = [
+    ('MTN', 'MTN MoMo'),
+    ('Airtel', 'Airtel Money'),
+]    
+
+class Checkout(models.Model):
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    email = models.EmailField()
+
+    # Phone number validation
+    phone_number_validator = RegexValidator(
+        regex=r'^(078|079|072|073)\d{7}$',
+        message="Phone number must start with 078, 079, 072, or 073 and be 10 digits long."
+    )
+    phonenumber = models.CharField(
+        max_length=10,
+        validators=[phone_number_validator],
+        help_text="Enter a valid phone number starting with 078, 079, 072, or 073."
+    )
+    
+    ticket_id = models.CharField(max_length=20, unique=True, editable=False)
+    qr_code = models.ImageField(upload_to='qr_codes/', blank=True, editable=False)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    purchased_ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.ticket_id:
+            # Generate a unique ticket ID
+            self.ticket_id = f"tick{uuid.uuid4().hex[:8]}"
+        
+        super().save(*args, **kwargs)
+
+        # Format the QR code data as a simple string without JSON
+        qr_data = (
+            f"Ticket ID: {self.ticket_id}\n"
+            f"Name: {self.firstname} {self.lastname}\n"
+            f"Email: {self.email}\n"
+            f"Phone Number: {self.phonenumber}\n"
+            f"Event: {self.event.name}\n"
+            f"Ticket Type: {self.purchased_ticket.name}\n"
+            f"Date: {self.event.date.strftime('%Y-%m-%d %H:%M')}"
+        )
+        
+        # Generate the QR code from the formatted string
+        qr_image = qrcode.make(qr_data)
+        buffer = BytesIO()
+        qr_image.save(buffer, format='PNG')
+        
+        # Save the QR code image
+        self.qr_code.save(f"{self.ticket_id}.png", File(buffer), save=False)
+        
+        super().save(*args, **kwargs)  # Save again to update the QR code
+
+    def __str__(self):
+        return f"{self.firstname} {self.lastname}"
+    
+    
+class Invitation(models.Model):
+    performer = models.ForeignKey(Perfomer, on_delete=models.CASCADE, related_name="invitations")
+    name = models.CharField(max_length=100)
+    telephone = models.CharField(max_length=15)
+    email = models.EmailField()
+    message = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Invitation to {self.performer.artist_name} by {self.name}"  
+
+class Contact(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.email}"
+           
+class Sponsor(models.Model):
+    company_name = models.CharField(max_length=255)
+    logo = models.ImageField(upload_to='sponsors/')
+    telephone = models.IntegerField(max_length=10)
+    paid = models.BooleanField(default=False)           
+    
+class Video(models.Model):
+    performer = models.ForeignKey(Perfomer, related_name="videos", on_delete=models.CASCADE)
+    video_url = models.URLField()
+    
+    def __str__(self):
+        return f"video for {self.performer.artist_name}"    
+    
+
+class Notification(models.Model):
+    title = models.CharField(max_length=100)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    def send_sms_to_all(self):
+        # Initialize Africa's Talking SDK
+        africastalking.initialize(
+            username=settings.AFRICASTALKING_USERNAME,  # Sandbox or live username
+            api_key=settings.AFRICASTALKING_API_KEY     # Your API key
+        )
+
+        recipients = ['+250794686625','+250790912004', '+250788565439']
+        # Create an SMS service instance
+        sms = africastalking.SMS
+
+        try:
+            # Send the SMS
+            response = sms.send(self.message, recipients)
+            print("SMS sent successfully:", response)
+        except Exception as e:
+            print(f"Error sending SMS: {e}")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Send SMS after saving the notification
+        self.send_sms_to_all()

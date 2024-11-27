@@ -1,0 +1,4 @@
+.nav-item.active a {
+    color: #FF5733; /* Choose your preferred color */
+    font-weight: bold;
+}

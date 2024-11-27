@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- speakers-217:31-->
+<head>
+   <!-- Basic Page Needs ================================================== -->
+   <meta charset="utf-8">
+
+   <!-- Mobile Specific Metas ================================================== -->
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+   <!-- Site Title -->
+   <title>Exhibit - Conference &amp; Event HTML Template</title>
+
+   <!-- CSS
+         ================================================== -->
+   <!-- Bootstrap -->
+   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+   <!-- FontAwesome -->
+   <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+   <!-- Animation -->
+   <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+   <!-- magnific -->
+   <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+   <!-- carousel -->
+   <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+   <!-- isotop -->
+   <link rel="stylesheet" href="{% static 'css/isotop.css' %}">
+   <!-- ico fonts -->
+   <link rel="stylesheet" href="{% static 'css/xsIcon.css' %}">
+   <!-- Template styles-->
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <!-- Responsive styles-->
+   <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+   <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+</head>
+
+<body>
+   <div class="body-inner">
+      <!-- Header start -->
+      <header id="header" class="header header-transparent">
+         <div class="container">
+            {% include "./including_page/nav.html" %}
+
+         </div><!-- container end-->
+      </header>
+      <!--/ Header end -->
+
+      <div id="page-banner-area" class="page-banner-area" style="background-image:url({% static 'images/hero_area/banner_bg.jpg' %})">
+         <!-- Subpage title start -->
+         <div class="page-banner-title">
+            <div class="text-center">
+               <h2>ABOUT</h2>
+               <ol class="breadcrumb">
+                  <li>
+                     <a href="{% url 'Home' %}">SpotLight /</a>
+                  </li>
+                  <li>
+                     About
+                  </li>
+               </ol>
+            </div>
+         </div><!-- Subpage title end -->
+      </div><!-- Page Banner end -->
+
+
+      <!-- ts intro start -->
+		<section class="ts-about-intro section-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<h2 class="section-title">
+							<span>Join The SpotLight</span>
+							Why Use SpotLight
+						</h2>
+					</div><!-- section title end-->
+				</div><!-- col end-->
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="about-intro-text text-right mb-60 mr-70">
+							<i class="icon-speaker"></i>
+							<h3 class="ts-title">Great Speakers</h3>
+							<p>
+								How you transform your business as technology, consumer, habits industry dynamic
+							</p>
+						</div><!-- single intro text end-->
+
+						<div class="about-intro-text text-right mr-70">
+							<i class="icon-netwrorking"></i>
+							<h3 class="ts-title">New People</h3>
+							<p>
+								How you transform your business as technology, consumer, habits industry dynamic
+							</p>
+						</div><!-- single intro text end-->
+						<div class="border-shap left"></div>
+					</div><!-- col end-->
+					<div class="col-lg-4 align-self-center">
+						<div class="about-video">
+							<img class="img-fluid" src="{% static 'images/about/about_img.jpg' %}" alt="">
+							<a href="https://www.youtube.com/watch?v=Bey4XXJAqS8" class="video-btn ts-video-popup"><i class="icon icon-play"></i></a>
+						</div><!-- entro video end-->
+					</div><!-- col end-->
+					<div class="col-lg-4">
+						<div class="about-intro-text mb-60 ml-70">
+							<i class="icon-people"></i>
+							<h3 class="ts-title">Networking</h3>
+							<p>
+								How you transform your business as technology, consumer, habits industry dynamic
+							</p>
+						</div><!-- single intro text end-->
+
+						<div class="about-intro-text ml-70">
+							<i class="icon-fun"></i>
+							<h3 class="ts-title">Have Fun</h3>
+							<p>
+								How you transform your business as technology, consumer, habits industry dynamic
+							</p>
+						</div><!-- single intro text end-->
+						<div class="border-shap left"></div>
+					</div><!-- col end-->
+				</div><!-- row end-->
+			</div><!-- container end-->
+		</section>
+		<!-- ts intro end-->
+
+      <!-- ts footer area start-->
+      <div class="footer-area">
+
+         {% include "./including_page/footer.html" %}
+
+         <div class="BackTo">
+                  <a href="#" class="fa fa-angle-up" aria-hidden="true"></a>
+              </div>
+
+      </div>
+      <!-- ts footer area end-->
+
+
+    
+
+      <!-- Javascript Files
+            ================================================== -->
+      <!-- initialize jQuery Library -->
+      <script src="{% static 'js/jquery.js' %}"></script>
+
+      <script src="{% static 'js/popper.min.js' %}"></script>
+      <!-- Bootstrap jQuery -->
+      <script src="{% static 'js/bootstrap.min.js' %}"></script>
+      <!-- Counter -->
+      <script src="{% static 'js/jquery.appear.min.js' %}"></script>
+      <!-- Countdown -->
+      <script src="{% static 'js/jquery.jCounter.js' %}"></script>
+      <!-- magnific-popup -->
+      <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+      <!-- carousel -->
+      <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+      <!-- Waypoints -->
+      <script src="{% static 'js/wow.min.js' %}"></script>
+      <!-- isotop -->
+      <script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+
+      <!-- Template custom -->
+      <script src="{% static 'js/main.js' %}"></script>
+   </div>
+   <!-- Body inner end -->
+</body>
+
+
+<!-- speakers-217:31-->
+</html>
