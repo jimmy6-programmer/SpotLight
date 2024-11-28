@@ -7,6 +7,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 import africastalking
 from django.conf import settings
+import re
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -25,8 +26,11 @@ class Perfomer(models.Model):
     facebook = models.URLField(blank=True, null=True)
     twitter = models.URLField(blank=True, null=True)
     instagram = models.URLField(blank=True, null=True)
+    email = models.EmailField(null=True, blank=True)
+    telephone = models.CharField(max_length=15)
     money_per_hour = models.IntegerField(null=True, blank=True)
     video_highlight = models.URLField(blank=True, null=True)
+    approved = models.BooleanField(default=False)
         
     def __str__(self):
         return self.artist_name
@@ -186,6 +190,20 @@ class Video(models.Model):
     def __str__(self):
         return f"video for {self.performer.artist_name}"    
     
+    def get_embedded_url(self):
+        """Extracts YouTube video ID and returns the embeddable URL."""
+        if "v=" in self.video_url:
+            try:
+                video_id = self.video_url.split('v=')[1].split('&')[0]
+                return f"https://www.youtube.com/embed/{video_id}"
+            except IndexError:
+                return None
+        elif "youtube.com/embed/" in self.video_url:
+            return self.video_url
+        elif "youtube.com/v/" in self.video_url:
+            video_id = self.video_url.split("youtube.com/v/")[1].split('?')[0]
+            return f"https://www.youtube.com/embed/{video_id}"
+        return None
 
 class Notification(models.Model):
     title = models.CharField(max_length=100)
@@ -202,7 +220,7 @@ class Notification(models.Model):
             api_key=settings.AFRICASTALKING_API_KEY     # Your API key
         )
 
-        recipients = ['+250794686625','+250790912004', '+250788565439']
+        recipients = ['+250794686625','+250790912004', '+250788565439']             
         # Create an SMS service instance
         sms = africastalking.SMS
 

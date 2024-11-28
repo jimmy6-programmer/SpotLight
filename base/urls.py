@@ -14,4 +14,5 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('become-sponsor/', views.become_sponsor, name='become_sponsor'),
     path('generate-parking-pdf/<int:booking_id>/', views.generate_parking_pdf, name='generate_parking_pdf'),
+    path('register-performer/', views.register_performer, name='register_performer'),
 ]

@@ -12,7 +12,7 @@ import os
 import base64
 import subprocess
 from django.contrib import messages
-from .forms import ContactForm
+from .forms import ContactForm, PerfomerRegistrationForm
 from django.templatetags.static import static
 from django.utils.html import escape
 
@@ -42,7 +42,7 @@ def perfomerdetails(request, id):
 
 def perfomers(request):
     categories = Category.objects.all()
-    performers = Perfomer.objects.all()  
+    performers = Perfomer.objects.filter(approved=True)  
 
     # Get filter parameters for the request
     category_id = request.GET.get('category')
@@ -55,11 +55,14 @@ def perfomers(request):
     # Filter perfomers based on name if provided
     if name_query:
         performers = performers.filter(artist_name__icontains=name_query)    
+        
+    # Initialize the registration form
+    form = PerfomerRegistrationForm()    
 
     context = {
         "categories": categories,
         "performers": performers,
-        "perfomers":perfomers,
+        "form":form,
     }
     return render(request, 'website/perfomers.html', context)
 
@@ -321,3 +324,18 @@ def generate_parking_pdf(request, booking_id):
         response = HttpResponse(pdf_file.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="parking_ticket.pdf"'
         return response
+    
+    
+    
+    
+
+def register_performer(request):
+    if request.method == 'POST':
+        form = PerfomerRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Registration successful! Please wait for approval.')
+            return redirect('perfomers')
+        else:
+            messages.error(request, 'There was an error with your submission.')
+    return redirect('perfomers')    
