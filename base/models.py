@@ -8,6 +8,7 @@ from django.db import models
 import africastalking
 from django.conf import settings
 import re
+from django.utils.crypto import get_random_string
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -27,10 +28,16 @@ class Perfomer(models.Model):
     twitter = models.URLField(blank=True, null=True)
     instagram = models.URLField(blank=True, null=True)
     email = models.EmailField(null=True, blank=True)
-    telephone = models.CharField(max_length=15)
+    telephone = models.CharField(max_length=15, null=False, blank=False)
     money_per_hour = models.IntegerField(null=True, blank=True)
     video_highlight = models.URLField(blank=True, null=True)
     approved = models.BooleanField(default=False)
+    security_code = models.CharField(max_length=8, unique=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.security_code:
+            self.security_code = str(uuid.uuid4())  # Generates a unique 8-character code
+        super().save(*args, **kwargs)
         
     def __str__(self):
         return self.artist_name
