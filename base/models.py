@@ -161,6 +161,11 @@ class Checkout(models.Model):
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
     
+ 
+DURATION_UNITS = [
+    ('hours', 'Hours'),
+    ('minutes', 'Minutes'),
+]    
     
 class Invitation(models.Model):
     performer = models.ForeignKey(Perfomer, on_delete=models.CASCADE, related_name="invitations")
@@ -169,6 +174,19 @@ class Invitation(models.Model):
     email = models.EmailField()
     message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    invite_performer_on = models.DateTimeField(null=True)  # When the performer is invited
+    location = models.CharField(max_length=255, null=True)  # Location of the event
+    duration = models.DecimalField(null=True, max_digits=9999999999999999, decimal_places=2)  # Duration in hours
+    duration_unit = models.CharField(max_length=10, choices=DURATION_UNITS, default='hours', null=True)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # Total calculated amount
+    
+    def save(self, *args, **kwargs):
+        if self.performer and self.performer.money_per_hour is not None:
+            duration_in_hours = self.duration
+            if self.duration_unit == 'minutes':
+                duration_in_hours = self.duration / 60  # Preserve fractional hours
+            self.total_amount = self.performer.money_per_hour * duration_in_hours
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Invitation to {self.performer.artist_name} by {self.name}"  
@@ -242,3 +260,24 @@ class Notification(models.Model):
         super().save(*args, **kwargs)
         # Send SMS after saving the notification
         self.send_sms_to_all()
+        
+class Advertisement(models.Model): 
+    name = models.CharField(max_length=255) 
+    link = models.URLField(blank=True, null=True)
+    video = models.FileField(upload_to='ads/', max_length=200) 
+
+    def __str__(self):
+        return self.name     
+    
+    
+class Banner(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField(upload_to='banners/')
+    button_text_1 = models.CharField(max_length=50, default='Get Ticket')
+    button_url_1 = models.URLField()
+    button_text_2 = models.CharField(max_length=50, default='Know More')
+    button_url_2 = models.URLField()
+
+    def __str__(self):
+        return self.title

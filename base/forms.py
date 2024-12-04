@@ -1,3 +1,4 @@
+import re
 from django import forms
 from base.models import Invitation, Checkout, Sponsor, ParkingLot, Perfomer, Category
 from django import forms
@@ -5,10 +6,24 @@ from .models import Contact
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
+
+DURATION_UNITS = [
+    ('hours', 'Hours'),
+    ('minutes', 'Minutes'),
+]
+
 class InvitationForm(forms.ModelForm):
+    duration_unit = forms.ChoiceField(
+        choices=DURATION_UNITS,
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+        }),
+        initial='hours'
+    )
+    
     class Meta:
         model = Invitation
-        fields = ['name', 'telephone', 'email', 'message']
+        fields = ['name', 'telephone', 'email', 'message', 'invite_performer_on', 'location', 'duration']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -25,9 +40,43 @@ class InvitationForm(forms.ModelForm):
             'message': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Write your message here',
-                'rows': 4  # Adjust rows for height if needed
+                'rows': 4
             }),
-        }        
+             'invite_performer_on': forms.TextInput(attrs={
+                'class': 'form-control datetimepicker',
+                'placeholder': 'Select date and time'
+            }),
+            'location': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the event location'
+            }),
+            'duration': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the duration'
+            }),
+            'duration_unit': forms.Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter the duration'
+            }),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        duration = cleaned_data.get('duration')
+        duration_unit = cleaned_data.get('duration_unit')
+        performer = cleaned_data.get('performer')
+
+        if duration and duration_unit:
+            # Convert minutes to hours if necessary
+            if duration_unit == 'minutes':
+                duration = duration / 60
+
+        if performer and duration:
+            performer_rate_per_hour = performer.money_per_hour
+            cleaned_data['total_amount'] = performer_rate_per_hour * duration
+
+        cleaned_data['duration'] = duration  # Ensure the converted duration is stored in hours
+        return cleaned_data
         
 class CheckoutForm(forms.ModelForm):
     PAYMENT_CHOICES = [
@@ -130,3 +179,18 @@ class PerfomerRegistrationForm(forms.ModelForm):
             if platform not in url:
                 raise ValidationError(f"URL must be a valid {platform} link.")
         return url
+    
+class PerformerLoginForm(forms.Form):
+    email = forms.EmailField(label='Email', max_length=254)
+    security_code = forms.CharField(label='Security Code', max_length=100)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        security_code = cleaned_data.get('security_code')
+
+        # Validate Performer existence
+        if not Perfomer.objects.filter(email=email, security_code=security_code).exists():
+            raise forms.ValidationError('Invalid email or security code.')
+
+        return cleaned_data

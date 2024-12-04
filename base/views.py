@@ -1,8 +1,10 @@
 import html
+import json
 from django.shortcuts import render, redirect, get_object_or_404
-from base.models import Perfomer, Category, Event, Ticket, Checkout, Sponsor, ParkingBooking, ParkingLot
-from base.forms import InvitationForm, CheckoutForm
-from django.http import HttpResponse
+from django.urls import reverse
+from base.models import Perfomer, Category, Event, Ticket, Checkout, Sponsor, ParkingBooking, ParkingLot, Advertisement, Banner
+from base.forms import InvitationForm, CheckoutForm, PerformerLoginForm
+from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMessage
 import qrcode
 from io import BytesIO
@@ -15,17 +17,22 @@ from django.contrib import messages
 from .forms import ContactForm, PerfomerRegistrationForm
 from django.templatetags.static import static
 from django.utils.html import escape
+from django.views import View
 
 
 # Create your views here.
 def home(request):
     performers = Perfomer.objects.all()[:8]
     events = Event.objects.all()[:3]
+    Advertisements= Advertisement.objects.all()
     paid_sponsors = Sponsor.objects.filter(paid=True)
+    banners = Banner.objects.all()
     context = {
         "performers":performers,
         "events":events,
         "paid_sponsors":paid_sponsors,
+        "Advertisements":Advertisements,
+        "banners":banners,
     }
     return render(request, 'website/index.html',context)
 
@@ -37,7 +44,7 @@ def perfomerdetails(request, id):
         "performers":performers,
         "form":form,
     }
-    return render(request, "website/perfomer-details.html" , context )
+    return render(request, "website/perfomer-details.html" , context)
     
 
 def perfomers(request):
@@ -79,7 +86,7 @@ def invite_performer(request, id):
     else:
         form = InvitationForm()
 
-    return render(request, 'website/performer-details.html', {'performer': performer, 'form': form})
+    return render(request, 'website/perfomer-details.html', {'performer': performer, 'form': form})
 
 
 def Events(request):
@@ -339,3 +346,95 @@ def register_performer(request):
         else:
             messages.error(request, 'There was an error with your submission.')
     return redirect('perfomers')    
+
+
+
+# class PerformerLoginView(View):
+#     # Redirect any GET requests back to the homepage or another appropriate page
+#     def get(self, request):
+#         return redirect('/')  # Redirect to homepage or any preferred page
+
+#     def post(self, request):
+#         email = request.POST.get('email')
+#         security_code = request.POST.get('security_code')
+        
+#         if not email or not security_code:
+#             messages.error(request, 'Email and security code are required.')
+#             return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirect back to the page with the modal
+
+#         try:
+#             performer = Perfomer.objects.get(email=email, security_code=security_code)
+#             request.session['performer_id'] = performer.id
+#             messages.success(request, 'Login successful!')
+#             return redirect('performer_dashboard') 
+#         except Perfomer.DoesNotExist:
+#             messages.error(request, 'Invalid email or security code.')
+#             return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+
+
+class PerformerLoginView(View):
+    def get(self, request):
+        """Handles GET request and initializes an empty form."""
+        form = PerformerLoginForm()
+        return render(request, 'website/index.html', {'form': form})
+
+    def post(self, request):
+        """Handles POST request for login form submission."""
+        form = PerformerLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            security_code = form.cleaned_data['security_code']
+
+            # Check if the performer exists
+            try:
+                performer = Perfomer.objects.get(email=email, security_code=security_code)
+                # Store performer ID in session
+                request.session['performer_id'] = performer.id
+                messages.success(request, 'Login successful!')
+                return redirect('performer_dashboard')
+            except Perfomer.DoesNotExist:
+                form.add_error(None, 'Invalid email or security code.')
+
+        # If form is not valid or performer doesn't exist, return form with errors
+        return render(request, 'website/index.html', {'form': form})
+
+
+
+
+        
+        
+
+class PerformerDashboardView(View):
+    def get(self, request):
+        # Get the performer ID from the session
+        performer_id = request.session.get('performer_id')
+        if not performer_id:
+            # Redirect to the login modal if the performer is not logged in
+            return HttpResponse('Invalid email or security code, try again later!')
+
+        try:
+            # Retrieve the performer using the ID from the session
+            performer = Perfomer.objects.get(id=performer_id)
+        except Perfomer.DoesNotExist:
+            # Clear session if performer no longer exists, then redirect to login
+            request.session.flush()
+            return HttpResponse('Invalid email or security code, try again later!')
+
+        # Fetch all invitations related to the performer
+        invitations = performer.invitations.all()
+
+        # Render the dashboard template with performer and invitations
+        return render(request, 'website/performer_dashboard.html', {
+            'performer': performer,
+            'invitations': invitations
+        })
+
+    
+    
+def logout_performer(request):
+    # Clear the session data for the performer
+    request.session.flush()  # This clears all session data
+    return redirect('Home')  # Redirect to home or login page            

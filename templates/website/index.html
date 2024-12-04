@@ -25,7 +25,9 @@
    <!-- magnific -->
    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
    <!-- carousel -->
-   <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+   {% comment %} <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}"> {% endcomment %}
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
    <!-- isotop -->
    <link rel="stylesheet" href="{% static 'css/isotop.css' %}">
    <!-- ico fonts -->
@@ -47,6 +49,202 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->   
 
+   <style>
+
+
+      /* Light Mode */
+      :root {
+         --background-color: #ffffff;
+         --text-color: #333333;
+         --icon-color: #ffffff;
+      }
+
+
+      .icon {
+         fill: var(--icon-color); /* For SVG icons */
+         color: var(--icon-color); /* For font icons */
+      }
+
+     
+      [data-theme="dark"] {
+         --background-color: #171717;
+         --text-color: #ffffff;
+         --primary-color: #fc1e61;
+      }
+
+      body {
+         background-color: var(--background-color);
+         color: var(--text-color);
+     }
+     
+     
+     .btn.fill {
+         background-color: transparent;
+         border: 2px solid var(--primary-color);
+         color: var(--primary-color);
+     }
+     
+     [data-theme="dark"] .modal-content {
+      background-color: #222222;
+      color: var(--text-color);
+   }
+  
+   [data-theme="dark"] .btn {
+      background-color: var(--primary-color);
+      color: #ffffff;
+   }
+  
+   .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: var(--primary-color, #fff); /* Adjust color as per your theme */
+  }
+  
+  .theme-toggle:focus {
+      outline: none;
+  }
+
+
+  /* Dark Mode */
+   [data-theme="dark"] .section-title {
+      color: #fc1e61;
+   }
+
+   /* Dark mode styles */
+   [data-theme="dark"] .ts-speaker-info {
+      background-color: #fc1e61; 
+   }
+
+   /* Dark mode styles */
+   [data-theme="light"] .ts-speaker-info {
+      background-color: #fff; 
+   }
+
+   /* Ensure links inside ts-speaker-info are also white */
+   [data-theme="dark"] .ts-speaker-info a {
+      color: #fff; /* Links inside the div will also be white */
+   }
+
+   [data-theme="dark"] .ts-speaker-info p {
+      color: #fff; /* Links inside the div will also be white */
+   }
+
+   [data-theme="dark"] .ts-speaker-info a:hover {
+      text-decoration: underline;
+      color:#fff; 
+   }
+
+
+   .banner-item {
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      padding: 100px 0; /* Reduced padding for smaller height */
+      border-radius: 0 0 100px 100px; /* Curved bottom */
+      overflow: hidden; /* Ensures content doesn't spill over */
+  }
+  
+  .banner-overlay {
+      position: absolute;
+      bottom: 0; /* Overlay starts at the bottom */
+      left: 0;
+      width: 100%;
+      height: 50%; /* Adjust height to control how far the overlay extends */
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      border-radius: inherit; /* Ensures overlay matches the curve */
+  }
+  
+  .banner-content-wrap {
+      position: relative;
+      z-index: 2;
+  }
+  
+  .banner-title {
+      font-size: 48px;
+      color: #fff;
+      font-weight: bold;
+  }
+  
+  .banner-desc {
+      font-size: 18px;
+      color: #fff;
+      margin: 20px 0;
+  }
+  
+  .banner-btn .btn {
+      margin: 10px;
+      padding: 10px 20px;
+      text-transform: uppercase;
+      background-color: #fc1e61;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+  }
+  
+  .banner-btn .btn.fill {
+      background: transparent;
+      border: 2px solid #fff;
+      color: #fff;
+  }
+  
+  /* Optional: Bottom shadow effect for extra depth */
+  .banner-item::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  }
+  
+  @supports (clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 85%, 0 90%)) {
+      .banner-item {
+          clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 85%, 0 90%);
+      }
+  }
+  
+
+  .owl-nav {
+   position: absolute;
+   top: 50%;
+   width: 100%;
+   transform: translateY(-50%);
+   display: flex;
+   justify-content: space-between;
+   pointer-events: none; /* Ensures arrows don't block other interactions */
+   padding:10px;
+   color:#fff;
+}
+
+   [data-theme="dark"] .owl-nav{
+      color: #fff;
+   }
+
+
+.owl-nav .owl-prev, .owl-nav .owl-next {
+   pointer-events: auto; /* Make arrows clickable */
+   background-color: rgba(0, 0, 0, 0.5); /* Optional: background color */
+   padding: 10px;
+   border-radius: 50%;   
+}
+
+.owl-prev {
+   left: 20px;
+}
+
+.owl-next {
+   right: 20px;
+}
+
+  
+  
+  
+
+   </style>   
+
 </head>
 
 <body>
@@ -60,299 +258,192 @@
       </header>
       <!--/ Header end -->
 
-      <!-- banner start-->
+      <!-- Banner start -->
       <section class="main-slider owl-carousel">
-         <div class="banner-item overlay" style="background-image:url({% static 'images/hero_area/banner3.jpg' %})">
-            <div class="container">
-               <div class="row">
-                  <div class="col-lg-11 mx-auto">
-                     <div class="banner-content-wrap text-center">
-                        <img class="title-shap-img" src="{% static 'images/shap/title-white.png' %}" alt="">  
-                        <h1 class="banner-title">Spotlight on Creative Talents</h1>
-
-                        <p class="banner-desc">
-                           Discover the forefront of entertainment as we bring together top creatives, musicians, DJs, and industry leaders. 
-                           See how innovation is transforming the entertainment experience.
-                        </p>
-                        <!-- Countdown end -->
-                        <div class="banner-btn">
-                           <a href="{% url 'events' %}" class="btn" style="background-color: #fc1e61;color:#fff">Get Ticket</a>
-                           <a href="{% url 'about' %}" class="btn fill">Know More</a>
+         {% for banner in banners %}
+            <div class="banner-item" style="background-image: url('{{ banner.image.url }}'); border-radius: 0 0 20px 20px;">
+               <div class="banner-overlay"></div>
+               <div class="container">
+                     <div class="row">
+                        <div class="col-lg-10 mx-auto text-center">
+                           <div class="banner-content-wrap">
+                                 <h1 class="banner-title">{{ banner.title }}</h1>
+                                 <p class="banner-desc">{{ banner.description }}</p>
+                                 <div class="banner-btn">
+                                    <a href="{{ banner.button_url_1 }}" class="btn" style="background-color: #fc1e61; color: #fff;">
+                                       {{ banner.button_text_1 }}
+                                    </a>
+                                    <a href="{{ banner.button_url_2 }}" class="btn fill">{{ banner.button_text_2 }}</a>
+                                 </div>
+                           </div>
                         </div>
-
                      </div>
-                     <!-- Banner content wrap end -->
-                  </div><!-- col end-->
-
-               </div><!-- row end-->
-            </div>
-            <!-- Container end -->
-         </div><!-- banner item end-->
-         <div class="banner-item overlay" style="background-image:url({% static 'images/hero_area/banner4.jpg' %})">
-            <div class="container">
-               <div class="row">
-                  <div class="col-lg-10 mx-auto">
-                     <div class="banner-content-wrap text-center">
-                        <img class="title-shap-img" src="{% static 'images/shap/title-white.png' %}" alt="">
-                        <h1 class="banner-title">Spotlight Creative Meetup</h1>
-
-                        <p class="banner-desc">
-                           Join us to explore how entertainment and creativity are evolving in today's world. Discover insights from leading musicians, DJs, and creators on shaping the future of entertainment.
-                        </p>
-                        <!-- Countdown end -->
-                        <div class="banner-btn">
-                           <a href="{% url 'events' %}" class="btn" style="background-color: #fc1e61;color:#fff">Get Ticket</a>
-                           <a href="{% url 'about' %}" class="btn fill">Know More</a>
-                        </div>
-
-                     </div>
-                     <!-- Banner content wrap end -->
-                  </div><!-- col end-->
-
-               </div><!-- row end-->
-            </div>
-            <!-- Container end -->
-         </div><!-- banner item end-->
-         <div class="banner-item overlay" style="background-image:url({% static 'images/hero_area/banner5.jpg' %})">
-            <div class="container">
-               <div class="row">
-                  <div class="col-lg-10 mx-auto">
-                     <div class="banner-content-wrap text-center">
-                        <img class="title-shap-img" src="{% static 'images/shap/title-white.png' %}" alt="">
-                        <h1 class="banner-title">Spotlight Creative Gathering</h1>
-
-                        <p class="banner-desc">
-                           Discover how the world of entertainment and creativity is evolving. Join us to hear from top artists, DJs, and creators on transforming the future of the industry and engaging audiences in new ways.
-                        </p>
-                        <!-- Countdown end -->
-                        <div class="banner-btn">
-                           <a href="{% url 'events' %}" class="btn" style="background-color: #fc1e61;color:#fff">Get Ticket</a>
-                           <a href="{% url 'about' %}" class="btn fill">Know More</a>
-                        </div>
-
-                     </div>
-                     <!-- Banner content wrap end -->
-                  </div><!-- col end-->
-
-               </div><!-- row end-->
-            </div>
-            <!-- Container end -->
-         </div><!-- banner item end-->
-
-      </section>
-      <!-- banner end-->
-
-      <!--count down start-->
-      <section class="ts-count-down">
-         <div class="container">
-            <div class="row">
-               <div class="col-lg-10 mx-auto">
-                  <div class="countdown gradient clearfix">
-                     <div class="counter-item">
-                        <span id="months-per-year">0</span>
-                        <div class="smalltext">Months in a year</div>
-                        <b>:</b>
-                     </div>
-                     <div class="counter-item">
-                        <span id="weeks-per-year">0</span>
-                        <div class="smalltext">Weeks in a year</div>
-                        <b>:</b>
-                     </div>
-                     <div class="counter-item">
-                        <span id="days-per-year">0</span>
-                        <div class="smalltext">Days in a year</div>
-                        <b>:</b>
-                     </div>
-                     <div class="counter-item">
-                        <span id="hours-per-year">0</span>
-                        <div class="smalltext">Hours in a year</div>
-                     </div>
-                  </div>
                </div>
             </div>
-         </div>
-         <script>
-                        // Function to create a counting effect for each element
-            function countUp(elementId, targetValue, duration) {
-               let currentValue = 0;
-               const increment = Math.ceil(targetValue / (duration / 50)); // Increment calculated based on duration
-
-               const interval = setInterval(() => {
-                  currentValue += increment;
-                  if (currentValue >= targetValue) {
-                     currentValue = targetValue; // Ensure we reach exactly the target value
-                     clearInterval(interval);    // Stop when the target is reached
-                  }
-                  document.getElementById(elementId).textContent = currentValue;
-               }, 50); // Step interval in milliseconds
-            }
-
-            // Run the counters
-            function startCounting() {
-               countUp('months-per-year', 12, 3000);         // Count to 12 in 3 seconds
-               countUp('weeks-per-year', 52, 3000);          // Count to 52 in 3 seconds
-               countUp('days-per-year', 365, 3000);          // Count to 365 in 3 seconds
-               countUp('hours-per-year', 365 * 24, 3000);    // Count to 8760 in 3 seconds
-            }
-
-            // Start the counting when the page loads
-            window.onload = startCounting;
-
-         </script>
+         {% endfor %}
+         
       </section>
+
+      <script>
+         document.addEventListener("DOMContentLoaded", function() {
+            $('.main-slider').owlCarousel({
+               items: 1,
+               rewind: true,
+               autoplay: true,
+               autoplayTimeout: 5000, // 5 seconds
+               dots: true,
+               nav: true, // For navigation arrows
+               navText: [
+                  '<i class="fa-solid fa-chevron-left"></i>',
+                  '<i class="fa-solid fa-chevron-right"></i>'
+               ]
+            });
+         });
+      </script>
+      <!-- Banner ends here -->
+
+
       
-      
-      <!--count down end-->
       <!-- ts intro start -->
-      <section class="ts-intro-outcome" style="background-image: url({% static 'images/bg/outcomes_bg.jpg' %})">
+      <section class="ts-intro-outcome">
          <div class="container">
-            <div class="row">
-               <div class="col-lg-8 mx-auto">
-                  <h2 class="section-title text-center">
-                     <span>Why Join us</span>
-                     Event Outcomes
-                  </h2>
-               </div>
-            </div><!-- row end-->
-            <div class="row">
-               <div class="col-lg-3 col-md-6 outcome-item">
-                  <div class="ts-single-outcome">
-                     <i class="icon-building"></i>
-                     <h3 class="ts-title">Building</h3>
-                  </div><!-- single outcome end-->
-               </div><!-- col end-->
-               <div class="col-lg-3 col-md-6 outcome-item">
-                  <div class="ts-single-outcome">
-                     <i class="icon-marketing"></i>
-                     <h3 class="ts-title">Marketing</h3>
-                  </div><!-- single outcome end-->
-               </div><!-- col end-->
-               <div class="col-lg-3 col-md-6 outcome-item">
-                  <div class="ts-single-outcome">
-                     <i class="icon-planning"></i>
-                     <h3 class="ts-title">Planning</h3>
-                  </div><!-- single outcome end-->
-               </div><!-- col end-->
-               <div class="col-lg-3 col-md-6 outcome-item">
-                  <div class="ts-single-outcome">
-                     <i class="icon-Monetizing"></i>
-                     <h3 class="ts-title">Monetizing</h3>
-                  </div><!-- single outcome end-->
-               </div><!-- col end-->
-            </div>
-         </div><!-- container end-->
-      </section>
+             <div class="row">
+                 <div class="col-lg-8 mx-auto">
+                     <h2 class="section-title text-center">
+                         <span>Why Join us</span>
+                         Event Outcomes
+                     </h2>
+                 </div>
+             </div>
+             <div class="row">
+                 <div class="col-lg-3 col-md-6 outcome-item">
+                     <div class="ts-single-outcome">
+                         <i class="icon-building"></i>
+                         <h3 class="ts-title">Building</h3>
+                     </div>
+                 </div>
+                 <div class="col-lg-3 col-md-6 outcome-item">
+                     <div class="ts-single-outcome">
+                         <i class="icon-marketing"></i>
+                         <h3 class="ts-title">Marketing</h3>
+                     </div>
+                 </div>
+                 <div class="col-lg-3 col-md-6 outcome-item">
+                     <div class="ts-single-outcome">
+                         <i class="icon-planning"></i>
+                         <h3 class="ts-title">Planning</h3>
+                     </div>
+                 </div>
+                 <div class="col-lg-3 col-md-6 outcome-item">
+                     <div class="ts-single-outcome">
+                         <i class="icon-Monetizing"></i>
+                         <h3 class="ts-title">Monetizing</h3>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </section>     
       <!-- ts intro end-->
       <!-- ts funfact start-->
-      <section class="ts-funfact" style="background-image: url({% static 'images/bg/funfact_bg.jpg' %})">
+
+      <section class="ts-funfact py-5" style="background-image: url({% static 'images/bg/funfact_bg.jpg' %});">
          <div class="container">
-            <div class="row">
-               <div class="col-lg-3 col-md-6">
-                  <div class="ts-single-funfact">
-                     <h3 class="funfact-num"><span class="counterUp" data-counter="43">43</span>+</h3>
-                     <h4 class="funfact-title">Our Happy
-                        Clients</h4>
-                  </div>
-               </div><!-- col end-->
-               <div class="col-lg-3 col-md-6">
-                  <div class="ts-single-funfact">
-                     <h3 class="funfact-num"><span class="counterUp" data-counter="62">62</span></h3>
-                     <h4 class="funfact-title">Our Sponsors</h4>
-                  </div>
-               </div><!-- col end-->
-               <div class="col-lg-3 col-md-6">
-                  <div class="ts-single-funfact">
-                     <h3 class="funfact-num"><span class="counterUp" data-counter="28">28</span>+</h3>
-                     <h4 class="funfact-title">Events
-                        We Planned</h4>
-                  </div>
-               </div><!-- col end-->
-               <div class="col-lg-3 col-md-6">
-                  <div class="ts-single-funfact">
-                     <h3 class="funfact-num"><span class="counterUp" data-counter="950">950</span>+</h3>
-                     <h4 class="funfact-title">Event
-                        Participants</h4>
-                  </div>
-               </div><!-- col end-->
-            </div><!-- row end-->
-         </div><!-- container end-->
-      </section>
+           {% for advertisement in Advertisements %}
+           <a href="{{ advertisement.link }}" target="_blank">
+             <div class="row justify-content-center">
+               <video 
+                 class="funfact-video animate__animated animate__fadeInUp" 
+                 src="{{ advertisement.video.url }}" 
+                 muted 
+                 playsinline 
+                 preload="auto" 
+                 style="
+                   width: 1300px; 
+                   height: 370px; 
+                   display: none; 
+                   object-fit: cover;
+                   border:10px solid #fff;
+                   border-radius:15px;
+                   "
+               ></video>
+             </div>
+           </a>
+           {% endfor %}
+         </div>
+       
+         <script>
+           document.addEventListener('DOMContentLoaded', () => {
+             const videos = document.querySelectorAll('.funfact-video');
+             let currentVideoIndex = 0;
+       
+             const playVideo = (index) => {
+               if (videos.length === 0) return; // No videos to play
+       
+               // Reset index to 0 when it reaches the end to loop
+               if (index >= videos.length) index = 0;
+       
+               const video = videos[index];
+               video.style.display = 'block'; // Show the current video
+               video.play();
+       
+               video.addEventListener('ended', () => {
+                 video.style.display = 'none'; // Hide the video when done
+                 playVideo(index + 1); // Play the next video
+               }, { once: true }); // Ensure the event fires only once
+             };
+       
+             // Start with the first video
+             playVideo(currentVideoIndex);
+           });
+         </script>
+       </section>
+       
+       
       <!-- ts funfact end-->
 
       <!-- ts speaker start-->
-      <section id="ts-speakers" class="ts-speakers speaker-classic" style="background-image:url({% static 'images/speakers/speaker_bg.png' %})">
+      <section id="ts-speakers" class="ts-speakers speaker-classic">
          <div class="container">
-            <div class="row">
-               <div class="col-lg-8 mx-auto">
-                  <h2 class="section-title text-center">
-                     <span>Check out our</span>
-                     Perfomers
-                  </h2>
-               </div><!-- col end-->
-            </div><!-- row end-->
-            <div class="row">
-               {% for performer in performers %}
-               <div class="col-lg-3 col-md-6">
-                  <div class="ts-speaker">
-                     <div class="speaker-img">
-                        <img class="img-fluid" src="{{ performer.image.url }}" alt="">
-                        <a href="{% url 'details' performer.id %}" class="view-speaker">
-                                    <i class="icon icon-plus"></i>
-                                </a>
+             <div class="row">
+                 <div class="col-lg-8 mx-auto">
+                     <h2 class="section-title text-center">
+                         <span>Check out our</span>
+                         Performers
+                     </h2>
+                 </div><!-- col end-->
+             </div><!-- row end-->
+             <div class="row">
+                 {% for performer in performers %}
+                 <div class="col-lg-3 col-md-6">
+                     <div class="ts-speaker">
+                         <div class="speaker-img">
+                             <img class="img-fluid" src="{{ performer.image.url }}" alt="">
+                             <a href="{% url 'details' performer.id %}" class="view-speaker">
+                                 <i class="icon icon-plus"></i>
+                             </a>
+                         </div>
+                         <div class="ts-speaker-info">
+                             <h3 class="ts-title">
+                                 <a href="#">{{ performer.first_name }} {{ performer.last_name }}</a>
+                             </h3>
+                             <p>{{ performer.artist_name }}</p>
+                         </div>
                      </div>
-                     <div class="ts-speaker-info">
-                        <h3 class="ts-title"><a href="#">{{ performer.first_name }} {{ performer.last_name }}</a></h3>
-                        <p>
-                           {{ performer.artist_name }}
-                        </p>
-                     </div>
-                  </div>
-               </div>
-               {% endfor %}<!-- col end-->
-            </div><!-- row end-->
+                 </div>
+                 {% endfor %}
+             </div><!-- row end-->
          </div><!-- container end-->
-
-         <!-- shap img-->
+     
+         <!-- Shape Images -->
          <div class="speaker-shap">
-            <img class="shap1" src="{% static 'images/shap/home_speaker_memphis1.png' %}" alt="">
-            <img class="shap2" src="{% static 'images/shap/home_speaker_memphis2.png' %}" alt="">
-            <img class="shap3" src="{% static 'images/shap/home_speaker_memphis3.png' %}" alt="">
+             <img class="shap1" src="{% static 'images/shap/home_speaker_memphis1.png' %}" alt="">
+             <img class="shap2" src="{% static 'images/shap/home_speaker_memphis2.png' %}" alt="">
+             <img class="shap3" src="{% static 'images/shap/home_speaker_memphis3.png' %}" alt="">
          </div>
-         <!-- shap img end-->
-      </section>
+     </section>     
       <!-- ts speaker end-->
 
-      <section class="ts-event-outcome">
-         <div class="container">
-            <div class="row">
-               <div class="col-lg-4">
-                  <div class="outcome-content">
-                     <div class="outcome-img overlay">
-                        <img class="" src="{% static 'images/about/learn_img.jpg' %}" alt="">
-                     </div>
-                     <h3 class="img-title text-white">Learn Things</h3>
-                  </div>
-               </div>
-               <div class="col-lg-4">
-                  <div class="outcome-content">
-                     <div class="outcome-img overlay">
-                        <img class="" src="{% static 'images/about/connect_img.jpg' %}" alt="">
-                     </div>
-                     <h3 class="img-title text-white">connect People</h3>
-                  </div>
-               </div>
-               <div class="col-lg-4">
-                  <div class="outcome-content">
-                     <div class="outcome-img overlay">
-                        <img class="" src="{% static 'images/about/newupdate.png' %}" alt="">
-                     </div>
-                     <h3 class="img-title text-white">New Updates</h3>
-                  </div>
-               </div>
-
-            </div>
-         </div>
-      </section>
+    
 
 
       <!-- ts experience start-->
@@ -507,13 +598,38 @@
       </div>
       <!-- ts footer area end-->
 
+      <script>
+         
+         document.addEventListener("DOMContentLoaded", () => {
+            const themeToggle = document.getElementById("theme-toggle");
+            const themeIcon = document.getElementById("theme-icon");
+            const currentTheme = localStorage.getItem("theme") || "light";
+        
+            // Set the initial theme and icon
+            document.documentElement.setAttribute("data-theme", currentTheme);
+            themeIcon.className = currentTheme === "dark" ? "fa fa-sun" : "fa fa-moon";
+        
+            themeToggle.addEventListener("click", () => {
+                const newTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+                document.documentElement.setAttribute("data-theme", newTheme);
+                localStorage.setItem("theme", newTheme);
+        
+                // Update the icon
+                themeIcon.className = newTheme === "dark" ? "fa fa-sun" : "fa fa-moon";
+            });
+        });
+        
+
+      </script>   
+
 
 
 
       <!-- Javascript Files
             ================================================== -->
       <!-- initialize jQuery Library -->
-      <script src="{% static 'js/jquery.js' %}"></script>
+      {% comment %} <script src="{% static 'js/jquery.js' %}"></script> {% endcomment %}
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
       <script src="{% static 'js/popper.min.js' %}"></script>
       <!-- Bootstrap jQuery -->
@@ -525,7 +641,8 @@
       <!-- magnific-popup -->
       <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
       <!-- carousel -->
-      <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+      {% comment %} <script src="{% static 'js/owl.carousel.min.js' %}"></script> {% endcomment %}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
       <!-- Waypoints -->
       <script src="{% static 'js/wow.min.js' %}"></script>
       <!-- isotop -->
@@ -536,6 +653,8 @@
 
       <!-- Bootstrap JS (with Popper) -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+      <!-- Include jQuery (needed for Bootstrap) -->
 
    </div>
    <!-- Body inner end -->

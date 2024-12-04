@@ -36,3 +36,59 @@
        </div>
     </div>
  </footer>
+
+
+<!-- Modal for Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title" id="loginModalLabel">Performer Login</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body">
+               <form method="POST" action="{% url 'performer_login' %}">
+                   {% csrf_token %}
+                   <div id="login-error" class="text-danger d-none"></div> <!-- Error message container -->
+
+                   {% for error in form.non_field_errors %}
+                     <div class="text-danger">{{ error }}</div>
+                   {% endfor %}
+
+                   <div class="mb-3">
+                       <label for="email" class="form-label">Email</label>
+                       <input type="email" class="form-control" id="email" name="email" value="{{ form.email.value|default:'' }}" placeholder="xxxxx@gmail.com" required autocomplete="off">
+
+                       {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors.0 }}</div>
+                       {% endif %}
+
+                   </div>
+                   <div class="mb-3">
+                       <label for="security_code" class="form-label">Security Code</label>
+                       <input type="text" class="form-control" id="security_code" name="security_code" value="{{ form.security_code.value|default:'' }}" placeholder="xxxx-xxxx" required autocomplete="off">
+
+                       {% if form.security_code.errors %}
+                        <div class="text-danger">{{ form.security_code.errors.0 }}</div>
+                       {% endif %}
+
+                   </div>
+                   <button type="submit" class="btn btn-primary">Login</button>
+               </form>
+           </div>
+       </div>
+   </div>
+</div>
+
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+       const formHasErrors = {{ form.is_bound|yesno:"true,false" }};
+       const formIsInvalid = {{ form.is_valid|yesno:"false,true" }};
+       if (formHasErrors === "true" && formIsInvalid === "false") {
+           const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+           modal.show();
+       }
+   });
+</script>
+

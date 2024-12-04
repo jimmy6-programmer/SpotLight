@@ -1,5 +1,5 @@
 from django.contrib import admin
-from base.models import Category, Ticket, Event, Perfomer, Checkout, Invitation, Sponsor, Video, ParkingLot, ParkingBooking, Notification
+from base.models import Category, Ticket, Event, Perfomer, Checkout, Invitation, Sponsor, Video, ParkingLot, ParkingBooking, Notification, Advertisement, Banner
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from .models import Contact
@@ -71,9 +71,17 @@ admin.site.register(Video)
 admin.site.register(ParkingLot)
 admin.site.register(ParkingBooking, ParkingBookingAdmin)
 admin.site.register(Notification, NotificationAdmin)
+admin.site.register(Banner)
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email','message', 'created_at')
     search_fields = ('first_name', 'last_name', 'email')
     list_filter = ('created_at',)
+
+from .models import Advertisement
+
+class AdvertisementAdmin(admin.ModelAdmin):
+    list_display = ('name', 'link', 'video')
+
+admin.site.register(Advertisement, AdvertisementAdmin)

@@ -322,7 +322,7 @@ img.pull-right {
     top: 0;
     content: '';
     right: 0;
-    background-image: url(../images/shap/title.png);
+    background-image: url(../images/shap/title-red.png);
     background-repeat: no-repeat;
     background-size: center center;
     background-position: contain;
@@ -1138,7 +1138,6 @@ img.pull-right {
       position: absolute;
       right: 0;
       bottom: -13px;
-      background: #fff;
       z-index: 1;
       width: 90%;
       padding: 20px 0 10px; }
@@ -1374,7 +1373,7 @@ img.pull-right {
     .schedule-listing .schedule-slot-info p {
       margin-bottom: 0; }
   .schedule-listing:hover .schedule-slot-title {
-    color: #3b1d82; }
+    color: #e7015e; }
   .schedule-listing:nth-of-type(even) .schedule-slot-time {
     background: #e7015e; }
   .schedule-listing.launce .schedule-slot-time {

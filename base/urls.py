@@ -15,4 +15,8 @@ urlpatterns = [
     path('become-sponsor/', views.become_sponsor, name='become_sponsor'),
     path('generate-parking-pdf/<int:booking_id>/', views.generate_parking_pdf, name='generate_parking_pdf'),
     path('register-performer/', views.register_performer, name='register_performer'),
+    # path('performer/login/', views.PerformerLoginView.as_view(), name='performer_login'),
+    path('performer-login/', views.PerformerLoginView.as_view(), name='performer_login'),
+    path('performer-dashboard', views.PerformerDashboardView.as_view(), name='performer_dashboard'),
+    path('logout/', views.logout_performer, name='logout'),
 ]

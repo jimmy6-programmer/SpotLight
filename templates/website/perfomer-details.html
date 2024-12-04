@@ -42,6 +42,9 @@
    <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 
 
    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -233,6 +236,17 @@
       <!-- ts footer area end-->
 
 
+      <script>
+         $(document).ready(function () {
+             $('.datetimepicker').datepicker({
+                 format: "yyyy-mm-dd",
+                 autoclose: true,
+                 todayHighlight: true,
+             });
+         });
+     </script>
+     
+
       <!-- Javascript Files
             ================================================== -->
       <!-- initialize jQuery Library -->
@@ -260,6 +274,20 @@
       <!-- Bootstrap JS (including Popper.js) -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+      <!-- Flatpickr JS -->
+      <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+      <script>
+         document.addEventListener('DOMContentLoaded', function () {
+             flatpickr('.datetimepicker', {
+                 enableTime: true,  // Allows selecting time
+                 dateFormat: "Y-m-d H:i",  // Format for date-time input
+                 time_24hr: true,  // Use 24-hour format
+                 minDate: "today",  // Disallow selecting past dates
+             });
+         });
+     </script>
+     
    </div>
    <!-- Body inner end -->
 </body>
