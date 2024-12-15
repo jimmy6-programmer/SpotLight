@@ -165,7 +165,13 @@ class Checkout(models.Model):
 DURATION_UNITS = [
     ('hours', 'Hours'),
     ('minutes', 'Minutes'),
-]    
+]
+
+STATUS_CHOICES = [
+    ('pending', 'Pending'),
+    ('approved', 'Approved'),
+    ('rejected', 'Rejected'),
+    ]    
     
 class Invitation(models.Model):
     performer = models.ForeignKey(Perfomer, on_delete=models.CASCADE, related_name="invitations")
@@ -179,6 +185,7 @@ class Invitation(models.Model):
     duration = models.DecimalField(null=True, max_digits=9999999999999999, decimal_places=2)  # Duration in hours
     duration_unit = models.CharField(max_length=10, choices=DURATION_UNITS, default='hours', null=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # Total calculated amount
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending', null=True) 
     
     def save(self, *args, **kwargs):
         if self.performer and self.performer.money_per_hour is not None:

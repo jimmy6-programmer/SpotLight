@@ -2,7 +2,7 @@ import html
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from base.models import Perfomer, Category, Event, Ticket, Checkout, Sponsor, ParkingBooking, ParkingLot, Advertisement, Banner
+from base.models import Perfomer, Category, Event, Ticket, Checkout, Sponsor, ParkingBooking, ParkingLot, Advertisement, Banner, Invitation
 from base.forms import InvitationForm, CheckoutForm, PerformerLoginForm
 from django.http import HttpResponse, JsonResponse
 from django.core.mail import EmailMessage
@@ -437,4 +437,17 @@ class PerformerDashboardView(View):
 def logout_performer(request):
     # Clear the session data for the performer
     request.session.flush()  # This clears all session data
-    return redirect('Home')  # Redirect to home or login page            
+    return redirect('Home')  # Redirect to home or login page      
+
+
+def approve_invitation(request, invitation_id):
+    invitation = get_object_or_404(Invitation, id=invitation_id)
+    invitation.status = 'approved'
+    invitation.save()
+    return redirect('performer_dashboard')  # Adjust as needed
+
+def reject_invitation(request, invitation_id):
+    invitation = get_object_or_404(Invitation, id=invitation_id)
+    invitation.status = 'rejected'
+    invitation.save()
+    return redirect('performer_dashboard')  # Adjust as needed      

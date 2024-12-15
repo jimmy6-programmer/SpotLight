@@ -19,4 +19,6 @@ urlpatterns = [
     path('performer-login/', views.PerformerLoginView.as_view(), name='performer_login'),
     path('performer-dashboard', views.PerformerDashboardView.as_view(), name='performer_dashboard'),
     path('logout/', views.logout_performer, name='logout'),
+    path('invitation/<int:invitation_id>/approve/', views.approve_invitation, name='approve_invitation'),
+    path('invitation/<int:invitation_id>/reject/', views.reject_invitation, name='reject_invitation'),
 ]

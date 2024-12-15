@@ -27,6 +27,20 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+<style>
+
+    .status.approved {
+        color: green;
+        font-weight: bold;
+    }
+    
+    .status.rejected {
+        color: red;
+        font-weight: bold;
+    }    
+
+</style>
+
 </head>
 
 <body>
@@ -176,9 +190,15 @@
                             <li><strong>Amount to be given: </strong> {{ invitation.total_amount }}</li>
                         </ul>
                         <div class="btn-box">
-                            <a href="#">Approve <i class="pe-7s-check"></i></a>
-                            <a href="#">Reject <i class="pe-7s-close-circle"></i></a>
-                        </div>
+                            {% if invitation.status == 'pending' %}
+                                <a href="{% url 'approve_invitation' invitation.id %}">Approve <i class="pe-7s-check"></i></a>
+                                <a href="{% url 'reject_invitation' invitation.id %}">Reject <i class="pe-7s-close-circle"></i></a>
+                            {% elif invitation.status == 'approved' %}
+                                <span class="status approved">Approved</span>
+                            {% elif invitation.status == 'rejected' %}
+                                <span class="status rejected">Rejected</span>
+                            {% endif %}
+                        </div>                        
                     </div>
                 </article>
                 {% empty %}

@@ -46,6 +46,45 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
 
+      <style>
+         /* Default Light Mode */
+.section-bg {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.section-title span {
+    color: #007bff;
+}
+
+.ts-title {
+    color: #222;
+}
+
+.about-intro-text p {
+    color: #555;
+}
+
+/* Dark Mode */
+.dark-mode .section-bg {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .section-title span {
+    color: #76c7c0;
+}
+
+.dark-mode .ts-title {
+    color: #ffffff;
+}
+
+.dark-mode .about-intro-text p {
+    color: #b3b3b3;
+}
+   
+      </style>
+
 </head>
 
 <body>
@@ -176,6 +215,30 @@
       <script src="{% static 'js/main.js' %}"></script>
    </div>
    <!-- Body inner end -->
+
+   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleSwitch = document.getElementById('modeToggle');
+        
+        // Check for saved mode in localStorage
+        const savedMode = localStorage.getItem('theme');
+        if (savedMode === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggleSwitch.checked = true;
+        }
+
+        toggleSwitch.addEventListener('change', function () {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark'); // Save preference
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light'); // Save preference
+            }
+        });
+    });
+</script>
+
 </body>
 
 
